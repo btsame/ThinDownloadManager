@@ -2,6 +2,9 @@ package com.thin.downloadmanager;
 
 import android.os.Process;
 import android.util.Log;
+
+import org.apache.http.conn.ConnectTimeoutException;
+
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
@@ -17,7 +20,6 @@ import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.BlockingQueue;
-import org.apache.http.conn.ConnectTimeoutException;
 
 import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static java.net.HttpURLConnection.HTTP_MOVED_PERM;
@@ -77,6 +79,7 @@ public class DownloadDispatcher extends Thread {
     		try {
                 mRequest = mQueue.take();
                 mRedirectionCount = 0;
+                shouldAllowRedirects = true;
                 Log.v(TAG, "Download initiated for " + mRequest.getDownloadId());
                 updateDownloadState(DownloadManager.STATUS_STARTED);
                 executeDownload(mRequest.getUri().toString());
